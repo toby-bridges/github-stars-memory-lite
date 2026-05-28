@@ -16,7 +16,9 @@ Requires Node 18+.
 
 ```bash
 node scripts/smoke-test.mjs
-node scripts/set-token.mjs --token "ghp_..."
+export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
+node scripts/set-token.mjs
+node scripts/token-status.mjs
 node scripts/sync-stars.mjs
 node scripts/find.mjs --query "agent framework"
 ```
@@ -29,11 +31,19 @@ node scripts/find.mjs --query "agent framework"
 node scripts/health.mjs
 ```
 
-### Save Token
+### Token Status
 
 ```bash
-node scripts/set-token.mjs --token "ghp_..."
+node scripts/token-status.mjs
 ```
+
+### Validate Token
+
+```bash
+node scripts/set-token.mjs
+```
+
+`set-token.mjs` does not save the token unless called with `--save true`.
 
 ### Sync Stars
 

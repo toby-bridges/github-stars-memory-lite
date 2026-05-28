@@ -1,5 +1,9 @@
 import assert from 'node:assert/strict';
+import fsp from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
 import {
+  getGitHubTokenSource,
   matchRepository,
   normalizeStarredItem,
   parseArgs,
@@ -22,6 +26,22 @@ assert.equal(parseBoolean(undefined, true), true);
 assert.equal(positiveInteger('12', 5), 12);
 assert.equal(positiveInteger('0', 5), 5);
 assert.equal(positiveInteger('nope', 5), 5);
+
+const tokenTempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'github-stars-memory-lite-unit-'));
+const previousToken = process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN;
+process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN = 'env-token';
+try {
+  const tokenSource = await getGitHubTokenSource({ 'data-dir': tokenTempDir });
+  assert.equal(tokenSource.token, 'env-token');
+  assert.equal(tokenSource.source, 'env:GITHUB_STARS_MEMORY_GITHUB_TOKEN');
+  assert.equal(tokenSource.persisted, false);
+} finally {
+  if (previousToken === undefined) {
+    delete process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN;
+  } else {
+    process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN = previousToken;
+  }
+}
 
 const existing = {
   id: 1,
@@ -64,5 +84,6 @@ console.log('');
 console.log('- parseArgs: ok');
 console.log('- parseBoolean: ok');
 console.log('- positiveInteger: ok');
+console.log('- token source: ok');
 console.log('- normalizeStarredItem: ok');
 console.log('- scoreRepository: ok');

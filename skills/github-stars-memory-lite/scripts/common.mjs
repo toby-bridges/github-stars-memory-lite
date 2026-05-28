@@ -126,22 +126,42 @@ export async function saveStore(store, args = {}) {
   });
 }
 
-export async function getGitHubToken(args = {}) {
+export async function getGitHubTokenSource(args = {}) {
   const config = await loadConfig(args);
-  return (
-    args.token
-    || process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN
-    || process.env.GITHUB_TOKEN
-    || config.github_token
-    || ''
-  );
+  if (args.token) {
+    return { token: args.token, source: 'argument', persisted: false };
+  }
+  if (process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN) {
+    return {
+      token: process.env.GITHUB_STARS_MEMORY_GITHUB_TOKEN,
+      source: 'env:GITHUB_STARS_MEMORY_GITHUB_TOKEN',
+      persisted: false,
+    };
+  }
+  if (process.env.GITHUB_TOKEN) {
+    return { token: process.env.GITHUB_TOKEN, source: 'env:GITHUB_TOKEN', persisted: false };
+  }
+  if (config.github_token) {
+    return {
+      token: config.github_token,
+      source: 'config:github_token',
+      persisted: true,
+      saved_at: config.github_token_saved_at || '',
+    };
+  }
+  return { token: '', source: 'none', persisted: false };
+}
+
+export async function getGitHubToken(args = {}) {
+  const tokenSource = await getGitHubTokenSource(args);
+  return tokenSource.token;
 }
 
 export async function githubRequest(apiPath, args = {}, options = {}) {
   assertRuntime();
   const token = await getGitHubToken(args);
   if (!token) {
-    throw new Error('GitHub token is missing. Run set-token.mjs or set GITHUB_STARS_MEMORY_GITHUB_TOKEN.');
+    throw new Error('GitHub token is missing. Set GITHUB_STARS_MEMORY_GITHUB_TOKEN or pass --token.');
   }
 
   const response = await fetch(`https://api.github.com${apiPath}`, {

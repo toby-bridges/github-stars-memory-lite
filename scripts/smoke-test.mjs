@@ -22,6 +22,11 @@ function run(name, args) {
     ...args,
   ], {
     encoding: 'utf8',
+    env: {
+      ...process.env,
+      GITHUB_STARS_MEMORY_GITHUB_TOKEN: '',
+      GITHUB_TOKEN: '',
+    },
   });
 
   if (result.status !== 0) {
@@ -68,6 +73,14 @@ const token = run('set-token.mjs', ['--token=fixture-token', '--skip-validate'])
 if (!token.includes('status: ok')) {
   throw new Error('set-token output did not confirm success');
 }
+if (!token.includes('saved_to_disk: false')) {
+  throw new Error('set-token saved token by default');
+}
+
+const tokenStatus = run('token-status.mjs', []);
+if (!tokenStatus.includes('token_source: none')) {
+  throw new Error('token-status did not report empty token source');
+}
 
 const sync = run('sync-stars.mjs', ['--mock-starred-file', starredPath]);
 if (!sync.includes('repositories: 2')) {
@@ -90,6 +103,7 @@ console.log('- health: ok');
 console.log('- find: ok');
 console.log('- annotate: ok');
 console.log('- set-token: ok');
+console.log('- token-status: ok');
 console.log('- sync-stars: ok');
 console.log('- refresh-releases: ok');
 console.log('- digest: ok');

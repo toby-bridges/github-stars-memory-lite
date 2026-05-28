@@ -15,20 +15,30 @@ It stores data in local JSON under `~/.github-stars-memory-lite/` and talks to t
 ## Quickstart
 
 ```bash
-git clone https://github.com/toby-bridges/github-stars-memory-lite.git
-cd github-stars-memory-lite
-node scripts/smoke-test.mjs
-node scripts/unit-test.mjs
-node skills/github-stars-memory-lite/scripts/set-token.mjs --token "ghp_..."
-node skills/github-stars-memory-lite/scripts/sync-stars.mjs
-node skills/github-stars-memory-lite/scripts/find.mjs --query "macos automation"
+hermes skills inspect toby-bridges/github-stars-memory-lite/skills/github-stars-memory-lite
+hermes skills install toby-bridges/github-stars-memory-lite/skills/github-stars-memory-lite
+export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
+node ~/.hermes/skills/github-stars-memory-lite/scripts/set-token.mjs
 ```
 
 Requires Node 18+.
 
-## Hermes Setup
+## Local Development Setup
 
-Add this repo's `skills/` directory to `~/.hermes/config.yaml`:
+Clone the repo when you want to dogfood unreleased changes:
+
+```bash
+git clone https://github.com/toby-bridges/github-stars-memory-lite.git
+cd github-stars-memory-lite
+node scripts/smoke-test.mjs
+node scripts/unit-test.mjs
+export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
+node skills/github-stars-memory-lite/scripts/set-token.mjs
+node skills/github-stars-memory-lite/scripts/sync-stars.mjs
+node skills/github-stars-memory-lite/scripts/find.mjs --query "macos automation"
+```
+
+For a local Hermes checkout, add this repo's `skills/` directory to `~/.hermes/config.yaml`:
 
 ```yaml
 skills:
@@ -44,7 +54,8 @@ Restart Hermes or reset the current session.
 node scripts/smoke-test.mjs
 node scripts/unit-test.mjs
 node skills/github-stars-memory-lite/scripts/health.mjs
-node skills/github-stars-memory-lite/scripts/set-token.mjs --token "ghp_..."
+node skills/github-stars-memory-lite/scripts/token-status.mjs
+node skills/github-stars-memory-lite/scripts/set-token.mjs
 node skills/github-stars-memory-lite/scripts/sync-stars.mjs
 node skills/github-stars-memory-lite/scripts/find.mjs --query "agent framework"
 node skills/github-stars-memory-lite/scripts/annotate.mjs --repo "owner/name" --note "why this matters" --status "want-to-try" --tags "agent,tooling"
@@ -62,13 +73,19 @@ Default data directory:
 
 Files:
 
-- `config.json`: GitHub token and local settings
+- `config.json`: local settings; GitHub token only if explicitly saved with `--save true`
 - `store.json`: repositories, annotations, and releases
 
 Override the data directory with:
 
 ```bash
 export GITHUB_STARS_MEMORY_DATA_DIR="/path/to/data"
+```
+
+Use an environment variable for the GitHub token:
+
+```bash
+export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
 ```
 
 ## Why This Exists
@@ -82,3 +99,5 @@ The goal is to keep the Hermes path fast and portable while preserving the core 
 - track releases with low overhead
 
 For the one-page setup checklist, see [docs/hermes-quickstart-checklist.md](docs/hermes-quickstart-checklist.md).
+
+For security boundaries and future module extraction ideas, see [docs/security-and-modules.md](docs/security-and-modules.md).

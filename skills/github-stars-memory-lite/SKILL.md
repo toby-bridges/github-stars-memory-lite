@@ -1,7 +1,7 @@
 ---
 name: github-stars-memory-lite
 description: Recall GitHub stars with local JSON.
-version: 0.1.0
+version: 0.2.0
 author: toby-bridges
 license: MIT
 platforms:
@@ -10,7 +10,7 @@ platforms:
 required_environment_variables:
   - name: GITHUB_STARS_MEMORY_GITHUB_TOKEN
     prompt: GitHub personal access token
-    help: Optional if already saved with set-token.mjs.
+    help: Recommended token source. The skill does not save this token unless explicitly asked with --save true.
     required_for: syncing GitHub stars and releases
 metadata:
   hermes:
@@ -39,25 +39,33 @@ This skill is best for:
 ## Procedure
 
 1. Check local status:
-   `node scripts/health.mjs`
+   `node ${HERMES_SKILL_DIR}/scripts/health.mjs`
 
-2. If no token is configured, save one:
-   `node scripts/set-token.mjs --token "..."`
+2. If no token is configured, ask the user to export `GITHUB_STARS_MEMORY_GITHUB_TOKEN`, then validate it:
+   `node ${HERMES_SKILL_DIR}/scripts/set-token.mjs`
 
 3. Sync starred repositories:
-   `node scripts/sync-stars.mjs`
+   `node ${HERMES_SKILL_DIR}/scripts/sync-stars.mjs`
 
 4. Search by intent:
-   `node scripts/find.mjs --query "..." --limit 10`
+   `node ${HERMES_SKILL_DIR}/scripts/find.mjs --query "..." --limit 10`
 
 5. Annotate a repository:
-   `node scripts/annotate.mjs --repo "owner/name" --note "..." --status "want-to-try" --tags "agent,tooling" --subscribe true`
+   `node ${HERMES_SKILL_DIR}/scripts/annotate.mjs --repo "owner/name" --note "..." --status "want-to-try" --tags "agent,tooling" --subscribe true`
 
 6. Refresh releases before a digest:
-   `node scripts/refresh-releases.mjs --subscribed-only true`
+   `node ${HERMES_SKILL_DIR}/scripts/refresh-releases.mjs --subscribed-only true`
 
 7. Build a digest:
-   `node scripts/digest.mjs --days 14 --limit 10`
+   `node ${HERMES_SKILL_DIR}/scripts/digest.mjs --days 14 --limit 10`
+
+## Safety Checks
+
+- Show token source without printing the token:
+  `node ${HERMES_SKILL_DIR}/scripts/token-status.mjs`
+- Do not ask the user to save a token unless they explicitly request local persistence.
+- If persistence is requested, use:
+  `node ${HERMES_SKILL_DIR}/scripts/set-token.mjs --save true`
 
 ## Output Style
 
@@ -72,6 +80,7 @@ Prefer concise markdown output:
 
 - The local store is JSON, not SQLite. Keep outputs small and avoid writing huge blobs.
 - Private repositories require a GitHub token with enough access.
+- Prefer environment variables for secrets. Avoid pasting tokens into chat transcripts.
 - `refresh-releases` defaults to subscribed repositories. Use `--subscribed-only false` for all synced stars.
 - Do not overwrite notes, tags, or status unless the user asked for it.
 

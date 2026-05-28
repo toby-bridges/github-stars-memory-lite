@@ -2,7 +2,7 @@ import process from 'node:process';
 import {
   getConfigPath,
   getDataDir,
-  getGitHubToken,
+  getGitHubTokenSource,
   getStorePath,
   loadStore,
   parseArgs,
@@ -12,7 +12,7 @@ import {
 const args = parseArgs(process.argv.slice(2));
 
 try {
-  const token = await getGitHubToken(args);
+  const tokenSource = await getGitHubTokenSource(args);
   const store = await loadStore(args);
 
   console.log('# GitHub Stars Memory Lite Health');
@@ -21,7 +21,9 @@ try {
   console.log(`- config: ${getConfigPath(args)}`);
   console.log(`- store: ${getStorePath(args)}`);
   console.log(`- store_exists: ${storeExists(args) ? 'true' : 'false'}`);
-  console.log(`- token_configured: ${token ? 'true' : 'false'}`);
+  console.log(`- token_configured: ${tokenSource.token ? 'true' : 'false'}`);
+  console.log(`- token_source: ${tokenSource.source}`);
+  console.log(`- token_saved_to_disk: ${tokenSource.persisted ? 'true' : 'false'}`);
   console.log(`- repositories: ${store.repositories.length}`);
   console.log(`- releases: ${store.releases.length}`);
   console.log(`- updated_at: ${store.updated_at || 'never'}`);
