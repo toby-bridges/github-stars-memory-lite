@@ -8,6 +8,8 @@ const rootDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const tempDir = await fsp.mkdtemp(path.join(os.tmpdir(), 'github-stars-memory-lite-'));
 const storePath = path.join(tempDir, 'store.json');
 const fixturePath = path.join(rootDir, 'fixtures', 'sample-store.json');
+const starredPath = path.join(rootDir, 'fixtures', 'starred-response.json');
+const releasesPath = path.join(rootDir, 'fixtures', 'releases-response.json');
 const scriptDir = path.join(rootDir, 'skills', 'github-stars-memory-lite', 'scripts');
 
 await fsp.copyFile(fixturePath, storePath);
@@ -62,10 +64,32 @@ if (!digest.includes('example/automation-kit')) {
   throw new Error('digest output did not include example/automation-kit');
 }
 
+const token = run('set-token.mjs', ['--token=fixture-token', '--skip-validate']);
+if (!token.includes('status: ok')) {
+  throw new Error('set-token output did not confirm success');
+}
+
+const sync = run('sync-stars.mjs', ['--mock-starred-file', starredPath]);
+if (!sync.includes('repositories: 2')) {
+  throw new Error('sync-stars output did not include expected repository count');
+}
+
+const refresh = run('refresh-releases.mjs', [
+  '--subscribed-only=false',
+  '--mock-releases-file',
+  releasesPath,
+]);
+if (!refresh.includes('releases fetched: 2')) {
+  throw new Error('refresh-releases output did not include expected release count');
+}
+
 console.log('# Smoke Test Complete');
 console.log('');
 console.log(`- data_dir: ${tempDir}`);
 console.log('- health: ok');
 console.log('- find: ok');
 console.log('- annotate: ok');
+console.log('- set-token: ok');
+console.log('- sync-stars: ok');
+console.log('- refresh-releases: ok');
 console.log('- digest: ok');

@@ -24,10 +24,11 @@ Restart Hermes or reset the current session.
 ## 3. Smoke Test
 
 ```bash
+node scripts/unit-test.mjs
 node scripts/smoke-test.mjs
 ```
 
-This does not call GitHub. It verifies the local JSON workflow with fixture data.
+This does not call GitHub. It verifies argument parsing, local JSON workflow, sync, annotation, and release digest behavior with fixture data.
 
 ## 4. Save Token
 

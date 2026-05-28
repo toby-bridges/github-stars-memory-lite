@@ -26,6 +26,12 @@ export function parseArgs(argv) {
   for (let index = 0; index < argv.length; index += 1) {
     const token = argv[index];
     if (!token.startsWith('--')) continue;
+    const inlineValueIndex = token.indexOf('=');
+    if (inlineValueIndex > 2) {
+      args[token.slice(2, inlineValueIndex)] = token.slice(inlineValueIndex + 1);
+      continue;
+    }
+
     const key = token.slice(2);
     const next = argv[index + 1];
     if (!next || next.startsWith('--')) {
@@ -36,6 +42,20 @@ export function parseArgs(argv) {
     index += 1;
   }
   return args;
+}
+
+export function positiveInteger(value, fallback) {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+}
+
+export function parseBoolean(value, fallback = false) {
+  if (value === undefined) return fallback;
+  if (typeof value === 'boolean') return value;
+  const normalized = String(value).trim().toLowerCase();
+  if (['1', 'true', 'yes', 'y', 'on'].includes(normalized)) return true;
+  if (['0', 'false', 'no', 'n', 'off'].includes(normalized)) return false;
+  return fallback;
 }
 
 export function getDataDir(args = {}) {
@@ -60,7 +80,7 @@ export function getStorePath(args = {}) {
   return path.join(getDataDir(args), 'store.json');
 }
 
-async function readJson(filePath, fallback) {
+export async function readJson(filePath, fallback) {
   try {
     const text = await fsp.readFile(filePath, 'utf8');
     return JSON.parse(text);
@@ -158,8 +178,13 @@ export function safeJsonParse(text) {
 }
 
 export async function fetchAllStarred(args = {}) {
-  const perPage = Number.parseInt(args['per-page'] || '100', 10);
-  const maxPages = Number.parseInt(args['max-pages'] || '100', 10);
+  if (args['mock-starred-file']) {
+    const mockPayload = await readJson(path.resolve(args['mock-starred-file']), []);
+    return Array.isArray(mockPayload) ? mockPayload : [];
+  }
+
+  const perPage = positiveInteger(args['per-page'], 100);
+  const maxPages = positiveInteger(args['max-pages'], 100);
   const results = [];
 
   for (let page = 1; page <= maxPages; page += 1) {
@@ -178,7 +203,13 @@ export async function fetchAllStarred(args = {}) {
 }
 
 export async function fetchReleases(fullName, args = {}) {
-  const perPage = Number.parseInt(args['per-repo'] || '20', 10);
+  if (args['mock-releases-file']) {
+    const mockPayload = await readJson(path.resolve(args['mock-releases-file']), {});
+    if (Array.isArray(mockPayload)) return mockPayload;
+    return Array.isArray(mockPayload?.[fullName]) ? mockPayload[fullName] : [];
+  }
+
+  const perPage = positiveInteger(args['per-repo'], 20);
   const [owner, repo] = String(fullName || '').split('/');
 
   if (!owner || !repo) {

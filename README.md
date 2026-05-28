@@ -18,6 +18,7 @@ It stores data in local JSON under `~/.github-stars-memory-lite/` and talks to t
 git clone https://github.com/toby-bridges/github-stars-memory-lite.git
 cd github-stars-memory-lite
 node scripts/smoke-test.mjs
+node scripts/unit-test.mjs
 node skills/github-stars-memory-lite/scripts/set-token.mjs --token "ghp_..."
 node skills/github-stars-memory-lite/scripts/sync-stars.mjs
 node skills/github-stars-memory-lite/scripts/find.mjs --query "macos automation"
@@ -41,6 +42,7 @@ Restart Hermes or reset the current session.
 
 ```bash
 node scripts/smoke-test.mjs
+node scripts/unit-test.mjs
 node skills/github-stars-memory-lite/scripts/health.mjs
 node skills/github-stars-memory-lite/scripts/set-token.mjs --token "ghp_..."
 node skills/github-stars-memory-lite/scripts/sync-stars.mjs

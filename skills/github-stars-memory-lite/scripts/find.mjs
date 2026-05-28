@@ -1,9 +1,9 @@
 import process from 'node:process';
-import { formatDate, loadStore, parseArgs, scoreRepository } from './common.mjs';
+import { formatDate, loadStore, parseArgs, positiveInteger, scoreRepository } from './common.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const query = args.query || args.q || '';
-const limit = Number.parseInt(args.limit || '10', 10);
+const limit = positiveInteger(args.limit, 10);
 
 if (!query.trim()) {
   console.error('Usage: node scripts/find.mjs --query "macos automation"');

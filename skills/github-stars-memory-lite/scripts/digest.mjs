@@ -1,10 +1,10 @@
 import process from 'node:process';
-import { formatDate, loadStore, parseArgs, withinLastDays } from './common.mjs';
+import { formatDate, loadStore, parseArgs, parseBoolean, positiveInteger, withinLastDays } from './common.mjs';
 
 const args = parseArgs(process.argv.slice(2));
-const days = Number.parseInt(args.days || '14', 10);
-const limit = Number.parseInt(args.limit || '10', 10);
-const subscribedOnly = args['subscribed-only'] !== 'false';
+const days = positiveInteger(args.days, 14);
+const limit = positiveInteger(args.limit, 10);
+const subscribedOnly = parseBoolean(args['subscribed-only'], true);
 
 try {
   const store = await loadStore(args);

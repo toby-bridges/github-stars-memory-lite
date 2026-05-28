@@ -1,5 +1,5 @@
 import process from 'node:process';
-import { loadStore, matchRepository, parseArgs, saveStore } from './common.mjs';
+import { loadStore, matchRepository, parseArgs, parseBoolean, saveStore } from './common.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const selector = args.repo || args.id || '';
@@ -30,7 +30,7 @@ try {
             .filter(Boolean),
         }
       : {}),
-    ...(args.subscribe !== undefined ? { subscribed_to_releases: args.subscribe === 'true' } : {}),
+    ...(args.subscribe !== undefined ? { subscribed_to_releases: parseBoolean(args.subscribe) } : {}),
     last_edited: new Date().toISOString(),
   };
 

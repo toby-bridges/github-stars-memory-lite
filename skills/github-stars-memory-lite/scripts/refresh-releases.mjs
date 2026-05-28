@@ -5,13 +5,15 @@ import {
   matchRepository,
   normalizeRelease,
   parseArgs,
+  parseBoolean,
+  positiveInteger,
   saveStore,
 } from './common.mjs';
 
 const args = parseArgs(process.argv.slice(2));
 const selector = args.repo || '';
-const subscribedOnly = args['subscribed-only'] !== 'false';
-const maxRepos = Number.parseInt(args['max-repos'] || '100', 10);
+const subscribedOnly = parseBoolean(args['subscribed-only'], true);
+const maxRepos = positiveInteger(args['max-repos'], 100);
 
 try {
   const store = await loadStore(args);
