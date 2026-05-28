@@ -175,6 +175,12 @@ node --check skills/github-stars-memory-lite/scripts/*.mjs scripts/*.mjs
 node scripts/smoke-test.mjs
 node scripts/mock-test.mjs
 node scripts/unit-test.mjs
+node scripts/hermes-packaging-test.mjs
+node scripts/security-regression-test.mjs
+node scripts/store-preservation-test.mjs
+node scripts/failure-path-test.mjs
+node scripts/live-github-dry-run-test.mjs
+node scripts/large-fixture-search-test.mjs
 ```
 
 On a machine with Hermes installed, validate the actual skill path:

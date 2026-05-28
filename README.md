@@ -39,6 +39,12 @@ cd github-stars-memory-lite
 node scripts/smoke-test.mjs
 node scripts/mock-test.mjs
 node scripts/unit-test.mjs
+node scripts/hermes-packaging-test.mjs
+node scripts/security-regression-test.mjs
+node scripts/store-preservation-test.mjs
+node scripts/failure-path-test.mjs
+node scripts/live-github-dry-run-test.mjs
+node scripts/large-fixture-search-test.mjs
 export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
 node skills/github-stars-memory-lite/scripts/set-token.mjs
 node skills/github-stars-memory-lite/scripts/sync-stars.mjs
@@ -61,6 +67,12 @@ Restart Hermes or reset the current session.
 node scripts/smoke-test.mjs
 node scripts/mock-test.mjs
 node scripts/unit-test.mjs
+node scripts/hermes-packaging-test.mjs
+node scripts/security-regression-test.mjs
+node scripts/store-preservation-test.mjs
+node scripts/failure-path-test.mjs
+node scripts/live-github-dry-run-test.mjs
+node scripts/large-fixture-search-test.mjs
 node skills/github-stars-memory-lite/scripts/health.mjs
 node skills/github-stars-memory-lite/scripts/token-status.mjs
 node skills/github-stars-memory-lite/scripts/set-token.mjs
