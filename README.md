@@ -37,6 +37,7 @@ Clone the repo when you want to dogfood unreleased changes:
 git clone https://github.com/toby-bridges/github-stars-memory-lite.git
 cd github-stars-memory-lite
 node scripts/smoke-test.mjs
+node scripts/mock-test.mjs
 node scripts/unit-test.mjs
 export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
 node skills/github-stars-memory-lite/scripts/set-token.mjs
@@ -58,6 +59,7 @@ Restart Hermes or reset the current session.
 
 ```bash
 node scripts/smoke-test.mjs
+node scripts/mock-test.mjs
 node scripts/unit-test.mjs
 node skills/github-stars-memory-lite/scripts/health.mjs
 node skills/github-stars-memory-lite/scripts/token-status.mjs

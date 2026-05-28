@@ -25,11 +25,12 @@ For a local checkout, add `/absolute/path/to/github-stars-memory-lite/skills` to
 ## 3. Smoke Test
 
 ```bash
-node scripts/unit-test.mjs
 node scripts/smoke-test.mjs
+node scripts/mock-test.mjs
+node scripts/unit-test.mjs
 ```
 
-Run this inside a local clone. It does not call GitHub. It verifies argument parsing, local JSON workflow, sync, annotation, and release digest behavior with fixture data.
+Run this inside a local clone. These tests do not call GitHub. `smoke-test` verifies the full local workflow, `mock-test` verifies fixture-only GitHub sync/release paths without a token, and `unit-test` covers TDD-style deterministic helpers.
 
 ## 4. Set Token Environment
 

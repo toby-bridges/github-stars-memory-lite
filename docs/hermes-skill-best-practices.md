@@ -172,8 +172,9 @@ Run these locally before committing changes:
 
 ```bash
 node --check skills/github-stars-memory-lite/scripts/*.mjs scripts/*.mjs
-node scripts/unit-test.mjs
 node scripts/smoke-test.mjs
+node scripts/mock-test.mjs
+node scripts/unit-test.mjs
 ```
 
 On a machine with Hermes installed, validate the actual skill path:
