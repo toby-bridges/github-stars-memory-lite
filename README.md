@@ -25,6 +25,12 @@ Requires Node 18+.
 
 ## Local Development Setup
 
+Before changing the skill, read the local Hermes standard:
+
+```bash
+sed -n '1,220p' docs/hermes-skill-best-practices.md
+```
+
 Clone the repo when you want to dogfood unreleased changes:
 
 ```bash
@@ -99,5 +105,7 @@ The goal is to keep the Hermes path fast and portable while preserving the core 
 - track releases with low overhead
 
 For the one-page setup checklist, see [docs/hermes-quickstart-checklist.md](docs/hermes-quickstart-checklist.md).
+
+For Hermes skill authoring rules, see [docs/hermes-skill-best-practices.md](docs/hermes-skill-best-practices.md).
 
 For security boundaries and future module extraction ideas, see [docs/security-and-modules.md](docs/security-and-modules.md).

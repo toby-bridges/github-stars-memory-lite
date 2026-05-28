@@ -2,6 +2,8 @@
 
 Use this on the machine that already has Hermes installed.
 
+For future development, read [hermes-skill-best-practices.md](hermes-skill-best-practices.md) before checking online docs.
+
 ## 1. Install Skill
 
 ```bash
