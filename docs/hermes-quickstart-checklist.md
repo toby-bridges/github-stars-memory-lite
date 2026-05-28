@@ -21,7 +21,15 @@ skills:
 
 Restart Hermes or reset the current session.
 
-## 3. Save Token
+## 3. Smoke Test
+
+```bash
+node scripts/smoke-test.mjs
+```
+
+This does not call GitHub. It verifies the local JSON workflow with fixture data.
+
+## 4. Save Token
 
 ```bash
 node skills/github-stars-memory-lite/scripts/set-token.mjs --token "ghp_..."
@@ -33,7 +41,7 @@ You can also use an environment variable:
 export GITHUB_STARS_MEMORY_GITHUB_TOKEN="ghp_..."
 ```
 
-## 4. Dogfood Loop
+## 5. Dogfood Loop
 
 ```bash
 node skills/github-stars-memory-lite/scripts/health.mjs
@@ -47,6 +55,7 @@ node skills/github-stars-memory-lite/scripts/digest.mjs --days 14 --limit 10
 ## Success Check
 
 - `health` shows token and store status
+- `smoke-test` passes before real GitHub API calls
 - `sync-stars` pulls your starred repositories
 - `find` returns a repo you actually wanted
 - `annotate` writes your private note/status/tags

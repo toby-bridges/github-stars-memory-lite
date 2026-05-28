@@ -11,6 +11,16 @@ const DEFAULT_STORE = {
   updated_at: null,
 };
 
+export function assertRuntime() {
+  const major = Number.parseInt(process.versions.node.split('.')[0], 10);
+  if (!Number.isFinite(major) || major < 18) {
+    throw new Error(`Node 18+ is required. Current version: ${process.version}`);
+  }
+  if (typeof fetch !== 'function') {
+    throw new Error('Global fetch is not available. Use Node 18+.');
+  }
+}
+
 export function parseArgs(argv) {
   const args = {};
   for (let index = 0; index < argv.length; index += 1) {
@@ -108,6 +118,7 @@ export async function getGitHubToken(args = {}) {
 }
 
 export async function githubRequest(apiPath, args = {}, options = {}) {
+  assertRuntime();
   const token = await getGitHubToken(args);
   if (!token) {
     throw new Error('GitHub token is missing. Run set-token.mjs or set GITHUB_STARS_MEMORY_GITHUB_TOKEN.');

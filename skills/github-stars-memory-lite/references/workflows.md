@@ -10,9 +10,12 @@ It uses Node built-ins and stores data in:
 ~/.github-stars-memory-lite/
 ```
 
+Requires Node 18+.
+
 ## First Run
 
 ```bash
+node scripts/smoke-test.mjs
 node scripts/set-token.mjs --token "ghp_..."
 node scripts/sync-stars.mjs
 node scripts/find.mjs --query "agent framework"
